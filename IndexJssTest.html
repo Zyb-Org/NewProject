@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="Ahtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>大数据平台</title>
+    <script src="js/vue.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/echarts.min.js"></script>
+
+
+    <!-- 头部 中部 -->
+    <!-- <script src="js/map.js"></script> -->
+    <script src="js/mapG.js"></script>
+    <script src="module/AppMain.js"></script>
+    <link href="module/AppMain.css" rel="stylesheet" type="text/css">
+    <script src="module/TopDt.js"></script>
+    <link href="module/TopDt.css" rel="stylesheet" type="text/css">
+    <script src="module/TitleDt.js"></script>
+    <script src="module/TitleLeftDt.js"></script><!-- 时间天气 -->
+    <link href="module/TitleLeftDt.css" rel="stylesheet" type="text/css">
+    <script src="module/TitleCenterDt.js"></script><!-- 标题 -->
+    <script src="module/TitleRightDt.js"></script><!-- 地图 公司 -->
+    <link href="module/TitleDtJssTest.css" rel="stylesheet" type="text/css">
+
+    <!-- 左边 -->
+    <script src="module/ProducteDt.js"></script> <!-- 生产统计 -->
+    <link href="module/ProducteDt.css" rel="stylesheet" type="text/css">
+    <!-- <script src="module/RunTJDt.js"></script> 运行统计 -->
+    <script src="module/RunNewDt.js"></script> <!-- 运行统计 -->
+    <link href="module/RunTJDt.css" rel="stylesheet" type="text/css">
+    <script src="module/PatrolDt.js"></script> <!-- 巡检管理 -->
+    <link href="module/PatrolDt.css" rel="stylesheet" type="text/css">
+    <script src="module/EquipmentDt.js"></script> <!-- 设备管理 -->
+    <link href="module/EquipmentDt.css" rel="stylesheet" type="text/css">
+    <script src="module/WorkOrderDt.js"></script>
+    <!--工单管理 -->
+    <link href="module/WorkOrderDt.css" rel="stylesheet" type="text/css">
+    <script src="module/CarDt.js"></script>
+    <!--在线车辆 -->
+    <link href="module/CarDt.css" rel="stylesheet" type="text/css">
+    <!-- 右边 -->
+    <!-- <script src="module/DangerCurDt.js"></script> 现存隐患 -->
+    <!-- <link href="module/DangerCurDt.css" rel="stylesheet" type="text/css"> -->
+    <script src="module/DangerCurSquareDt.js"></script> <!-- 现存隐患 -->
+    <link href="module/DangerCurSquareDt.css" rel="stylesheet" type="text/css">
+    <script src="module/DangerFindDt.js"></script> <!-- 隐患发现处理 -->
+    <link href="module/DangerFindDt.css" rel="stylesheet" type="text/css">
+    <script src="module/CurThreeDt.js"></script> <!-- 现存第三方统计 -->
+    <link href="module/CurThreeDt.css" rel="stylesheet" type="text/css">
+    <script src="module/BuildingsiteDt.js"></script> <!-- 工地管理 -->
+    <link href="module/BuildingsiteDt.css" rel="stylesheet" type="text/css">
+
+
+    <link href="module/BigScreenCommonJssTest.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <script src="../js/common.min.js"></script>
+    <script>
+        var userinfo = null;
+        var FullState = true;
+        var isMap = true;
+        var mapGroup = "";
+        AjaxLabel2({ name: "LoginInfo", Action: "Query", DataType: "json" }, function (result) {
+            if (result.success) {
+                userinfo = result.data;
+            }
+        }, false);
+        if (userinfo.EmployeeID == "") {
+            window.location.href = "http://192.168.0.16:8066/login.aspx";
+            //window.location.href = "http://http://10.10.8.108:8066/login.aspx";
+            //window.location.href = "http://192.168.1.216:8010/login.aspx";
+        }
+        else {
+            userinfo.selGroupID = userinfo.GroupID;
+            mapGroup = userinfo.GroupID;
+        }
+        var websocketurl = "";
+        AjaxLabel2({ name: "CheckNet", DataType: "json" }, function (result) {
+            if (result.success) {
+                websocketurl = result.data.websocketurl;
+            }
+        }, false);
+        $(document).keyup(function (event) {
+            switch (event.keyCode) {
+                case 27:
+                    Top.FullScreen();
+                    break;
+            }
+        });    
+    </script>
+    <script src="../js/update.min.js"></script>
+</head>
+
+<body class="Abody">
+    <!--顶部-->
+    <div id="top"></div>
+    <!--标题-->
+    <div id="title" class="title">
+        <div id="titleLeft"></div>
+        <div id="titleCenter"></div>
+        <div id="titleRight"></div>
+    </div>
+    <!--中间-->
+    <div id="ebody" style="width:100%; height:92%">
+        <!--左-->
+        <div class="leftbody">
+            <!--生产统计-->
+            <div id="data1"></div>
+            <!--运行统计-->
+            <div id="data2"></div>
+            <!--巡检管理-->
+            <div id="data3"></div>
+            <!--设备管理-->
+            <div id="data4"></div>
+            <!--工单管理-->
+            <div id="data5"></div>
+            <!-- <div id="data10"></div> -->
+        </div>
+        <!--地图-->
+        <div class="map" id="dataMain"></div>
+        <!--右-->
+        <div class="rightbody">
+            <!--现存隐患-->
+            <div id="data9"></div>
+            <!--隐患发现/处理-->
+            <div id="data6"></div>
+            <!--现存第三方工地-->
+            <div id="data7"></div>
+            <!--第三方工地监护-->
+            <div id="data8"></div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/weatherDic.js"></script>
+    <script src="js/jk.js"></script>
+    <script src="js/DataPushFun.js"></script>
+    <link href="css/main1119.css" rel="stylesheet" type="text/css">
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1b3d4a74928379b47dfdc675c837572"></script>
+    <!-- <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+    <!-- <script type="text/javascript" src="js/echartmap/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="js/echartmap/echarts.min.js"></script>
+    <script type="text/javascript" src="js/echartmap/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="js/echartmap/ecStat.min.js"></script>
+    <script type="text/javascript" src="js/echartmap/dataTool.min.js"></script>
+    <script type="text/javascript" src="js/echartmap/china.js"></script>
+    <script type="text/javascript" src="js/echartmap/world.js"></script>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=2.0&ak=m3MIEf1Ia115ZisZgVsfBt886G4Tpibw"></script>
+    <script type="text/javascript" src="js/echartmap/bmap.min.js"></script>
+    <script type="text/javascript" src="js/echartmap/simplex.js"></script> -->
+    <script>
+        $(document).ready(function () {
+            if (typeof window.AddFunction == "function") {
+                AddFunction("Dept:" + userinfo.GroupID, dealDept);//公司组织
+                AddFunction("Fault:Level:" + userinfo.GroupID, dealFault);//现存隐患
+                AddFunction("Fault:processFault:" + userinfo.GroupID + ":day", dealProcessFault);//隐患发现
+                AddFunction("Worksite:Level:" + userinfo.GroupID, dealWorksiteLevel);//现存工地等级
+                AddFunction("Worksite:Type:" + userinfo.GroupID, dealWorksiteType);//现存工地类型
+                AddFunction("Worksite:processWorksite:" + userinfo.GroupID + ":day", dealProcessWorksite);//工地处理
+                // AddFunction("EquipmentCount:" + userinfo.GroupID + ":day", dealEquipmentCount);//设备统计
+                AddFunction("Repair:processrepair:" + userinfo.GroupID + ":day", dealProcessrepair);//工单统计
+                AddFunction("Scheduled:" + userinfo.GroupID, dealScheduled);//计划已排率
+                AddFunction("Inspection:" + userinfo.GroupID + ":day", dealInspection);//巡检管理
+                AddFunction("working:" + userinfo.GroupID + ":day", dealRunTJ);//运行统计
+                AddFunction("production:" + userinfo.GroupID + ":day", dealProduction);//生产统计
+                AddFunction("EquipmentCount:" + userinfo.GroupID, dealAppMain);//设备类型
+            } else {
+                AddFunction("Dept:" + userinfo.GroupID, dealDept);//公司组织
+                AddFunction("Fault:Level:" + userinfo.GroupID, dealFault);//现存隐患
+                AddFunction("Fault:processFault:" + userinfo.GroupID + ":day", dealProcessFault);//隐患发现
+                AddFunction("Worksite:Level:" + userinfo.GroupID, dealWorksiteLevel);//现存工地等级
+                AddFunction("Worksite:Type:" + userinfo.GroupID, dealWorksiteType);//现存工地类型
+                AddFunction("Worksite:processWorksite:" + userinfo.GroupID + ":day", dealProcessWorksite);//工地处理
+                // AddFunction("EquipmentCount:" + userinfo.GroupID + ":day", dealEquipmentCount);//设备统计
+                AddFunction("Repair:processrepair:" + userinfo.GroupID + ":day", dealProcessrepair);//工单统计
+                AddFunction("Scheduled:" + userinfo.GroupID, dealScheduled);//计划已排率
+                AddFunction("Inspection:" + userinfo.GroupID + ":day", dealInspection);//巡检管理
+                AddFunction("working:" + userinfo.GroupID + ":day", dealRunTJ);//运行统计
+                AddFunction("production:" + userinfo.GroupID + ":day", dealProduction);//生产统计
+                AddFunction("EquipmentCount:" + userinfo.GroupID, dealAppMain);//设备类型
+            }
+            window.onresize = function () {  //页面大小发生变化时，触发事件
+                var s = $(".data1")[0].offsetHeight * 5 - 8;
+                $("#dataMain").css("height", s);
+                ProducteTJ.$mount();
+                RunTJ.$mount();
+                Patrol.$mount();
+                Equipment.$mount();
+                CurThree.$mount();
+                WorkOrder.$mount();
+                DangerFind.$mount();
+                Buildingsite.$mount();
+            }
+        });
+
+        var Top = new iniTop().TopHtml("top");//头部   
+        var TitleLeft = new iniTitleLeft().TitleLeftHtml("titleLeft");//头部左边
+        var TitleCenter = new iniTitleCenter().TitleCenterHtml("titleCenter");//头部中间        
+        var ProducteTJ = new iniProducteTJ().productetjHtml("data1");//生产统计
+        //var RunTJ = new iniRunTJ().runtjHtml("data2");//运行统计
+        var RunTJ = new iniRunNewTJ().runNewHtml("data2");//运行统计
+        var Patrol = new iniPatrol().PatrolHtml("data3");//巡检管理
+        var Equipment = new iniEquipment().EquipmentHtml("data4");//设备管理
+        var WorkOrder = new iniWorkOrder().WorkOrderHtml("data5");//工单管理
+        // var CarInfo = new iniCar().iniCarHtml("data10");//在线车辆
+        var DangerCur = new iniDangerCur().DangerCurHtml("data9");//现存隐患
+        var DangerFind = new iniDangerFind().DangerFindHtml("data6");//隐患发现/处理
+        var CurThree = new iniCurThree().CurThreeHtml("data7");//现存第三方
+        var Buildingsite = new iniBuildingsite().BuildingsiteHtml("data8");//工地管理
+        var Main = new iniAppMain().AppMainHtml("dataMain");//地图下面设备统计      
+        var TitleRight = new iniTitleRight().TitleRightHtml("titleRight");//头部右侧
+        // var Title = new iniTitle().TitleHtml("title");//头部右侧
+    </script>
+
+</body>
+
+</html>
