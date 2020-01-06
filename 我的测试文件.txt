@@ -1,2 +1,5 @@
 echo 
 git init
+
+git wangzj
+git wzj
