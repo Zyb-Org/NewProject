@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="Ahtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>大数据平台</title>
+    <script src="js/vue.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src='js/echarts-liquidfill.js'></script>
+    <script src="module/configCommon.js"></script>
+
+    <!-- 头部 中部 -->
+    <!-- <script src="js/map.js"></script> -->
+    <script src="js/mapG.js"></script>
+    <script src="module/AppMain.js"></script>
+    <link href="module/AppMain.css" rel="stylesheet" type="text/css">
+    <script src="module/TopDt.js"></script>
+    <link href="module/TopDt.css" rel="stylesheet" type="text/css">
+    <script src="module/TitleDt.js"></script>
+    <script src="module/TitleLeftDt.js"></script>
+    <!-- 时间天气 -->
+    <link href="module/TitleLeftDt.css" rel="stylesheet" type="text/css">
+    <script src="module/TitleCenterDt.js"></script>
+    <!-- 标题 -->
+    <script src="module/TitleRightDt.js"></script>
+    <!-- 地图 公司 -->
+    <link href="module/TitleDt.css" rel="stylesheet" type="text/css">
+
+    <!-- 左边 -->
+    <script src="module/ProducteDt.js"></script>
+    <!-- 生产统计 -->
+    <link href="module/ProducteDt.css" rel="stylesheet" type="text/css">
+    <!-- <script src="module/RunTJDt.js"></script> 运行统计 -->
+    <script src="module/RunNewDt.js"></script>
+    <!-- 运行统计 -->
+    <link href="module/RunTJDt.css" rel="stylesheet" type="text/css">
+    <script src="module/PatrolDt.js"></script>
+    <!-- 巡检管理 -->
+    <link href="module/PatrolDt.css" rel="stylesheet" type="text/css">
+    <script src="module/EquipmentDt.js"></script>
+    <!-- 设备管理 -->
+    <link href="module/EquipmentDt.css" rel="stylesheet" type="text/css">
+    <script src="module/WorkOrderDt.js"></script>
+    <!--工单管理 -->
+    <link href="module/WorkOrderDt.css" rel="stylesheet" type="text/css">
+    <script src="module/CarDt.js"></script>
+    <!--在线车辆 -->
+    <link href="module/CarDt.css" rel="stylesheet" type="text/css">
+    <!-- 右边 -->
+    <!-- <script src="module/DangerCurDt.js"></script> 现存隐患 -->
+    <!-- <link href="module/DangerCurDt.css" rel="stylesheet" type="text/css"> -->
+    <script src="module/DangerCurSquareDt.js"></script>
+    <!-- 现存隐患 -->
+    <link href="module/DangerCurSquareDt.css" rel="stylesheet" type="text/css">
+    <script src="module/DangerFindDt.js"></script>
+    <!-- 隐患发现处理 -->
+    <link href="module/DangerFindDt.css" rel="stylesheet" type="text/css">
+    <script src="module/CurThreeDt.js"></script>
+    <!-- 现存第三方统计 -->
+    <link href="module/CurThreeDt.css" rel="stylesheet" type="text/css">
+    <script src="module/BuildingsiteDt.js"></script>
+    <!-- 工地管理 -->
+    <link href="module/BuildingsiteDt.css" rel="stylesheet" type="text/css">
+    <link href="module/BigScreenCommon.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+	 <link href="module/BigScreenCommonJssTest.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <script src="../js/common.min.js"></script>
+    <script>
+        var userinfo = null;
+        var FullState = true;
+        var isMap = true;
+        var mapGroup = "";
+        AjaxLabel2({ name: "LoginInfo", Action: "Query", DataType: "json" }, function (result) {
+            if (result.success) {
+                userinfo = result.data;
+            }
+        }, false);
+        if (userinfo.EmployeeID == "") {
+            window.location.href = "http://192.168.0.16:8066/login.aspx";
+            //window.location.href = "http://http://10.10.8.108:8066/login.aspx";
+            //window.location.href = "http://192.168.1.216:8010/login.aspx";
+        }
+        else {
+            userinfo.selGroupID = userinfo.GroupID;
+            mapGroup = userinfo.GroupID;
+        }
+        var websocketurl = "";
+        AjaxLabel2({ name: "CheckNet", DataType: "json" }, function (result) {
+            if (result.success) {
+                websocketurl = result.data.websocketurl;
+            }
+        }, false);
+        $(document).keyup(function (event) {
+            switch (event.keyCode) {
+                case 27:
+                    Top.FullScreen();
+                    break;
+            }
+        });    
+    </script>
+    <script src="../js/update.min.js"></script>
+</head>
+
+<body class="Abody">
+     <div id="dvDisabledShield" style='z-index: 9999; position: absolute; left: 0px; top: 0px; background: silver; width: 2800px; height: 2800px; display: none; filter: Alpha(Opacity=40); opacity: 0.4;'>
+    </div>
+    <span id="lodingAjax-TB" style="display: none">
+        <img src="images/small_loading1.gif" />
+    </span>
+    <!--顶部-->
+    <div id="top"></div>
+    <!--标题-->
+    <div id="title" class="title">
+        <div id="titleLeft"></div>
+        <div id="titleCenter"></div>
+        <div id="titleRight"></div>
+    </div>
+    <!--中间-->
+    <div id="ebody" style="width: 100%; height: 92%">
+        <!--左-->
+        <div class="leftbody" style="width: 25%; height: 100%">
+            <!--生产统计-->
+            <div id="data1"></div>
+            <!--运行统计-->
+            <div id="data2"></div>
+            <!--巡检管理-->
+            <div id="data3"></div>
+            <!--设备管理-->
+            <div id="data4"></div>
+            <!--工单管理-->
+            <div id="data5"></div>
+            <!-- <div id="data10"></div> -->
+        </div>
+        <!--地图-->
+        <div class="map" id="dataMain" style="width: 50%; height: 100%"></div>
+        <!--右-->
+        <div class="rightbody" style="width: 25%; height: 100%">
+            <!--现存隐患-->
+            <div id="data9"></div>
+            <!--隐患发现/处理-->
+            <div id="data6"></div>
+            <!--现存第三方工地-->
+            <div id="data7"></div>
+            <!--第三方工地监护-->
+            <div id="data8"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>
