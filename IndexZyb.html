@@ -120,6 +120,70 @@
         </div>
     </div>
 
+	<script>
+        $(document).ready(function () {
+            if (typeof window.AddFunction == "function") {
+                AddFunction("Dept:" + userinfo.GroupID, dealDept);//公司组织
+                AddFunction("Fault:Level:" + userinfo.GroupID, dealFault);//现存隐患
+                AddFunction("Fault:processFault:" + userinfo.GroupID + ":day", dealProcessFault);//隐患发现
+                AddFunction("Worksite:Level:" + userinfo.GroupID, dealWorksiteLevel);//现存工地等级
+                AddFunction("Worksite:Type:" + userinfo.GroupID, dealWorksiteType);//现存工地类型
+                AddFunction("Worksite:processWorksite:" + userinfo.GroupID + ":day", dealProcessWorksite);//工地处理
+                // AddFunction("EquipmentCount:" + userinfo.GroupID + ":day", dealEquipmentCount);//设备统计
+                AddFunction("Repair:processrepair:" + userinfo.GroupID + ":day", dealProcessrepair);//工单统计
+                AddFunction("Scheduled:" + userinfo.GroupID, dealScheduled);//计划已排率
+                AddFunction("Inspection:" + userinfo.GroupID + ":day", dealInspection);//巡检管理
+                AddFunction("working:" + userinfo.GroupID + ":day", dealRunTJ);//运行统计
+                AddFunction("production:" + userinfo.GroupID + ":day", dealProduction);//生产统计
+                AddFunction("EquipmentCount:" + userinfo.GroupID, dealAppMain);//设备类型
+            } else {
+                AddFunction("Dept:" + userinfo.GroupID, dealDept);//公司组织
+                AddFunction("Fault:Level:" + userinfo.GroupID, dealFault);//现存隐患
+                AddFunction("Fault:processFault:" + userinfo.GroupID + ":day", dealProcessFault);//隐患发现
+                AddFunction("Worksite:Level:" + userinfo.GroupID, dealWorksiteLevel);//现存工地等级
+                AddFunction("Worksite:Type:" + userinfo.GroupID, dealWorksiteType);//现存工地类型
+                AddFunction("Worksite:processWorksite:" + userinfo.GroupID + ":day", dealProcessWorksite);//工地处理
+                // AddFunction("EquipmentCount:" + userinfo.GroupID + ":day", dealEquipmentCount);//设备统计
+                AddFunction("Repair:processrepair:" + userinfo.GroupID + ":day", dealProcessrepair);//工单统计
+                AddFunction("Scheduled:" + userinfo.GroupID, dealScheduled);//计划已排率
+                AddFunction("Inspection:" + userinfo.GroupID + ":day", dealInspection);//巡检管理
+                AddFunction("working:" + userinfo.GroupID + ":day", dealRunTJ);//运行统计
+                AddFunction("production:" + userinfo.GroupID + ":day", dealProduction);//生产统计
+                AddFunction("EquipmentCount:" + userinfo.GroupID, dealAppMain);//设备类型
+            }
+            window.onresize = function () {  //页面大小发生变化时，触发事件
+                var s = $(".data1")[0].offsetHeight * 5 - 8;
+                $("#dataMain").css("height", s);
+                ProducteTJ.$mount();
+                RunTJ.$mount();
+                Patrol.$mount();
+                Equipment.$mount();
+                CurThree.$mount();
+                WorkOrder.$mount();
+                DangerFind.$mount();
+                Buildingsite.$mount();
+            }
+        });
+
+        var Top = new iniTop().TopHtml("top");//头部   
+        var TitleLeft = new iniTitleLeft().TitleLeftHtml("titleLeft");//头部左边
+        var TitleCenter = new iniTitleCenter().TitleCenterHtml("titleCenter");//头部中间        
+        var ProducteTJ = new iniProducteTJ().productetjHtml("data1");//生产统计
+        //var RunTJ = new iniRunTJ().runtjHtml("data2");//运行统计
+        var RunTJ = new iniRunNewTJ().runNewHtml("data2");//运行统计
+        var Patrol = new iniPatrol().PatrolHtml("data3");//巡检管理
+        var Equipment = new iniEquipment().EquipmentHtml("data4");//设备管理
+        var WorkOrder = new iniWorkOrder().WorkOrderHtml("data5");//工单管理
+        // var CarInfo = new iniCar().iniCarHtml("data10");//在线车辆
+        var DangerCur = new iniDangerCur().DangerCurHtml("data9");//现存隐患
+        var DangerFind = new iniDangerFind().DangerFindHtml("data6");//隐患发现/处理
+        var CurThree = new iniCurThree().CurThreeHtml("data7");//现存第三方
+        var Buildingsite = new iniBuildingsite().BuildingsiteHtml("data8");//工地管理
+        var Main = new iniAppMain().AppMainHtml("dataMain");//地图下面设备统计      
+        var TitleRight = new iniTitleRight().TitleRightHtml("titleRight");//头部右侧
+        // var Title = new iniTitle().TitleHtml("title");//头部右侧
+    </script>
+
 </body>
 
 </html>
